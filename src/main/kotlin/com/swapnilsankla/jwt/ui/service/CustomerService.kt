@@ -17,13 +17,8 @@ import org.springframework.web.client.RestTemplate
 @Service
 class CustomerService(
 	@Autowired private val restTemplate: RestTemplate,
-	@Value("\${customer-service.get-customers.endpoint}") val customerServiceEndpoint: String,
-	@Value("\${auth-service.generateToken.endpoint}") val authEndpoint: String
+	@Value("\${customer-service.get-customers.endpoint}") val customerServiceEndpoint: String
 ) {
-	fun token(token: String?): String {
-		return token ?: generateToken()
-	}
-
 	fun get(customerId: String, token: String): Customer {
 		try {
 			return restTemplate
@@ -33,7 +28,7 @@ class CustomerService(
 					HttpEntity(null, httpHeaders(token)),
 					Customer::class.java
 				)
-				.body!!
+				.body ?: throw CustomerNotFoundException("No customer exists for given id")
 		} catch (exception: HttpClientErrorException) {
 			if(exception.statusCode == HttpStatus.NOT_FOUND)
 				throw CustomerNotFoundException("No customer exists for given id")
@@ -43,11 +38,6 @@ class CustomerService(
 			throw UnknownProcessingError("Unknown error", exception)
 		}
 		throw UnknownProcessingError("Unknown error")
-	}
-
-	private fun generateToken(): String {
-		return restTemplate
-			.postForEntity(authEndpoint, null, String::class.java).body!!
 	}
 
 	private fun httpHeaders(token: String): HttpHeaders {

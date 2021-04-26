@@ -1,5 +1,8 @@
 package com.swapnilsankla.jwt.auth.service
 
+import io.jsonwebtoken.Claims
+import io.jsonwebtoken.Header
+import io.jsonwebtoken.Jwt
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.security.Keys
 import org.springframework.beans.factory.annotation.Value
@@ -12,9 +15,10 @@ class TokenService(
 	@Value("\${auth-service.token.expiryInSeconds}") val tokenExpiryInSeconds: Int
 ) {
 
-	fun generate(): String {
+	fun generate(customerId: String): String {
 		return Jwts
 			.builder()
+			.claim("customerId", customerId)
 			.setExpiration(setExpiry())
 			.signWith(generatePrivateKeyFromSecret())
 			.compact()
@@ -24,15 +28,23 @@ class TokenService(
 
 	fun validate(token: String): Boolean {
 		return try {
-			Jwts
-				.parserBuilder()
-				.setSigningKey(generatePrivateKeyFromSecret())
-				.build()
-				.parse(token)
+			parseToken(token)
 			true
 		} catch (exception: Exception) {
 			false
 		}
+	}
+
+	private fun parseToken(token: String): Jwt<out Header<*>, *>? {
+		return Jwts
+			.parserBuilder()
+			.setSigningKey(generatePrivateKeyFromSecret())
+			.build()
+			.parse(token)
+	}
+
+	fun claimsFromToken(token: String): Map<String, Any> {
+		return (parseToken(token)?.body as? Claims)?.toMap() ?: emptyMap()
 	}
 
 	private fun generatePrivateKeyFromSecret() = Keys.hmacShaKeyFor(secret.toByteArray())

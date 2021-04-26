@@ -52,12 +52,25 @@ class UIControllerIntegrationTest {
 	fun `UI should get Unauthorized response to fetch the customer details who exists within the system when acquired authorization token is expired`() {
 		val entity1 = restTemplate.getForEntity("/ui/customers/1", Customer::class.java)
 		val token = entity1.headers["authorization"]!!.first()
-		Thread.sleep(10000)
+		Thread.sleep(2000)
 		val headers = HttpHeaders()
 		headers.add("authorization", token)
 		val requestEntity = HttpEntity(null, headers)
 
 		val entity2 = restTemplate.exchange("/ui/customers/1", HttpMethod.GET, requestEntity, Customer::class.java)
+
+		entity2.statusCode shouldBe HttpStatus.UNAUTHORIZED
+	}
+
+	@Test
+	fun `UI should get Unauthorized response to fetch the customer details who exists within the system with someone else's acquired authorization token`() {
+		val entity1 = restTemplate.getForEntity("/ui/customers/1", Customer::class.java)
+		val token = entity1.headers["authorization"]!!.first()
+		val headers = HttpHeaders()
+		headers.add("authorization", token)
+		val requestEntity = HttpEntity(null, headers)
+
+		val entity2 = restTemplate.exchange("/ui/customers/2", HttpMethod.GET, requestEntity, Customer::class.java)
 
 		entity2.statusCode shouldBe HttpStatus.UNAUTHORIZED
 	}

@@ -6,8 +6,10 @@ customer-service:
 auth-service:
   secret: asdfghjklwertyuisdfghjertyuixcvbnmertyuicvbmwertyuidfghjklcvbnmfghjkl
   token:
-    expiryInSeconds: 10
+    expiryInSeconds: 2
   generateToken:
     endpoint: http://localhost:${server.port}/auth/token
   validateToken:
-    endpoint: http://localhost:${server.port}/auth/validate/{token}
+    endpoint: http://localhost:${server.port}/auth/token/{token}/isValid
+  claims:
+    endpoint: http://localhost:${server.port}/auth/token/{token}/claims

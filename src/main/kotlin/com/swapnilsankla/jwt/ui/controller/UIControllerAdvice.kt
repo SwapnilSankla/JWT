@@ -1,9 +1,6 @@
 package com.swapnilsankla.jwt.ui.controller
 
-import com.swapnilsankla.jwt.ui.model.Customer
-import com.swapnilsankla.jwt.ui.model.CustomerNotFoundException
-import com.swapnilsankla.jwt.ui.model.InvalidTokenException
-import com.swapnilsankla.jwt.ui.model.UnknownProcessingError
+import com.swapnilsankla.jwt.ui.model.*
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.ControllerAdvice
@@ -21,7 +18,7 @@ class UIControllerAdvice {
 		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build()
 	}
 
-	@ExceptionHandler(InvalidTokenException::class)
+	@ExceptionHandler(InvalidTokenException::class, FailedToGenerateTokenException::class)
 	fun handleCustomerNotFound(exception: InvalidTokenException): ResponseEntity<Customer> {
 		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build()
 	}
