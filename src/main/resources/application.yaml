@@ -1,2 +1,13 @@
 server:
   port: 8081
+customer-service:
+  get-customers:
+    endpoint: http://localhost:${server.port}/customers/{customerId}
+auth-service:
+  secret: asdfghjklwertyuisdfghjertyuixcvbnmertyuicvbmwertyuidfghjklcvbnmfghjkl
+  token:
+    expiryInSeconds: 10
+  generateToken:
+    endpoint: http://localhost:${server.port}/auth/token
+  validateToken:
+    endpoint: http://localhost:${server.port}/auth/validate/{token}

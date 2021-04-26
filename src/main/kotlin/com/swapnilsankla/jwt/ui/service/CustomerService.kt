@@ -5,6 +5,7 @@ import com.swapnilsankla.jwt.ui.model.CustomerNotFoundException
 import com.swapnilsankla.jwt.ui.model.InvalidTokenException
 import com.swapnilsankla.jwt.ui.model.UnknownProcessingError
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpMethod
@@ -14,14 +15,22 @@ import org.springframework.web.client.HttpClientErrorException
 import org.springframework.web.client.RestTemplate
 
 @Service
-class CustomerService(@Autowired private val restTemplate: RestTemplate) {
-	fun get(customerId: String, token: String?): Customer {
+class CustomerService(
+	@Autowired private val restTemplate: RestTemplate,
+	@Value("\${customer-service.get-customers.endpoint}") val customerServiceEndpoint: String,
+	@Value("\${auth-service.generateToken.endpoint}") val authEndpoint: String
+) {
+	fun token(token: String?): String {
+		return token ?: generateToken()
+	}
+
+	fun get(customerId: String, token: String): Customer {
 		try {
 			return restTemplate
 				.exchange(
-					"http://localhost:8081/customers/$customerId",
+					customerServiceEndpoint.replace("{customerId}", customerId),
 					HttpMethod.GET,
-					HttpEntity(null, httpHeaders(token ?: generateToken())),
+					HttpEntity(null, httpHeaders(token)),
 					Customer::class.java
 				)
 				.body!!
@@ -38,7 +47,7 @@ class CustomerService(@Autowired private val restTemplate: RestTemplate) {
 
 	private fun generateToken(): String {
 		return restTemplate
-			.postForEntity("http://localhost:8081/auth/token", null, String::class.java).body!!
+			.postForEntity(authEndpoint, null, String::class.java).body!!
 	}
 
 	private fun httpHeaders(token: String): HttpHeaders {

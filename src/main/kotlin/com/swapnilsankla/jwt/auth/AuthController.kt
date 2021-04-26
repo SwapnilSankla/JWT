@@ -1,21 +1,15 @@
 package com.swapnilsankla.jwt.auth
 
+import com.swapnilsankla.jwt.auth.service.TokenService
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/auth")
-class AuthController {
-	companion object {
-		private const val TOKEN = "token"
-	}
-
+class AuthController(@Autowired val tokenService: TokenService){
 	@PostMapping("/token")
-	fun token(): String {
-		return TOKEN
-	}
+	fun token() = tokenService.generate()
 
 	@GetMapping("/validate/{token}")
-	fun validateToken(@PathVariable token: String): Boolean {
-		return token == TOKEN
-	}
+	fun validateToken(@PathVariable token: String) = tokenService.validate(token)
 }
