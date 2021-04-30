@@ -2,3 +2,8 @@ key-store:
   path: classpath:jwtsecret.jks
   password: mypass
   alias: jwt-secret
+token-resolver:
+  key-store:
+    path: classpath:jwtconsumer.jks
+    password: mypass
+    alias: jwt-consumer
