@@ -13,5 +13,5 @@ open class ConfigurationClass {
 	}
 
 	@Bean
-	open fun restTemplate() = RestTemplate()
+	open fun restTemplateInCustomer() = RestTemplate()
 }

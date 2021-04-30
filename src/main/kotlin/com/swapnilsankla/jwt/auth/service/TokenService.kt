@@ -17,9 +17,9 @@ class TokenService(
 	fun generate(customerId: String): String {
 		return Jwts
 			.builder()
-			.claim("customerId", customerId)
+			.claim("customerId", encryptionFactory.get().encrypt(customerId))
 			.setExpiration(setExpiry())
-			.signWith(encryptionFactory.get().key())
+			.signWith(encryptionFactory.get().signingKey())
 			.compact()
 	}
 
@@ -33,7 +33,10 @@ class TokenService(
 	}
 
 	fun claimsFromToken(token: String): Map<String, Any> {
-		return (parseToken(token)?.body as? Claims)?.toMap() ?: emptyMap()
+		val encryptedClaims = (parseToken(token)?.body as? Claims)?.toMap() ?: emptyMap()
+		return encryptedClaims.mapValues {
+			if (it.key == "customerId") encryptionFactory.get().decrypt(it.value as String) else it.value
+		}
 	}
 
 	private fun setExpiry() = Date.from(Date().toInstant().plusSeconds(tokenExpiryInSeconds.toLong()))
@@ -41,7 +44,7 @@ class TokenService(
 	private fun parseToken(token: String): Jwt<out Header<*>, *>? {
 		return Jwts
 			.parserBuilder()
-			.setSigningKey(encryptionFactory.get().key())
+			.setSigningKey(encryptionFactory.get().signingKey())
 			.build()
 			.parse(token)
 	}

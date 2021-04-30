@@ -4,5 +4,7 @@ import java.security.Key
 
 
 interface Encryption {
-	fun key(): Key
+	fun signingKey(): Key
+	fun encrypt(claim: String): String
+	fun decrypt(encryptedClaim: String): String
 }

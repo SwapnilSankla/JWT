@@ -24,7 +24,9 @@ class AuthServiceInUIPackage(
 	}
 
 	fun isUserAuthorised(token: String, customerId: String): Boolean {
-		val customerIdInToken = if(tokenSigningMethod == TokenSigningMethod.Symmetric.name) getCustomerIdFromAuthService(token) else getCustomerIdFromToken(token)
+		val customerIdInToken =
+			if (tokenSigningMethod == TokenSigningMethod.Symmetric.name) getCustomerIdFromAuthService(token)
+			else getCustomerIdFromToken(token)
 		return customerIdInToken?.equals(customerId) == true
 	}
 
