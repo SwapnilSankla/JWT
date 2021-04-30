@@ -2,6 +2,7 @@ package com.swapnilsankla.jwt.ui.controller
 
 import com.swapnilsankla.jwt.ui.model.Customer
 import io.kotlintest.shouldBe
+import org.junit.jupiter.api.RepeatedTest
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
@@ -10,11 +11,18 @@ import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpMethod
 import org.springframework.http.HttpStatus
+import org.springframework.test.annotation.DirtiesContext
+import org.springframework.test.annotation.Repeat
 import org.springframework.test.context.ActiveProfiles
+import org.springframework.test.context.TestPropertySource
+import org.springframework.test.context.TestPropertySources
 
 @ActiveProfiles("test")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
-class UIControllerIntegrationTest {
+@DirtiesContext
+@TestPropertySource(
+	properties = ["token.signing.method=Asymmetric"]
+)class UIControllerIntegrationTestAsymmetricKeyEncryption {
 
 	@Autowired
 	private lateinit var restTemplate: TestRestTemplate

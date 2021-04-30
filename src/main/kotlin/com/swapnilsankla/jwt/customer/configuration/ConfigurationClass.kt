@@ -13,5 +13,5 @@ open class ConfigurationClass {
 	}
 
 	@Bean
-	open fun restTemaplate() = RestTemplate()
+	open fun restTemplate() = RestTemplate()
 }

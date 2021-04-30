@@ -1,0 +1,4 @@
+key-store:
+  path: classpath:jwtsecret.jks
+  password: mypass
+  alias: jwt-secret

@@ -1,6 +1,7 @@
 package com.swapnilsankla.jwt.customer.controller
 
 import com.swapnilsankla.jwt.customer.model.Customer
+import com.swapnilsankla.jwt.customer.service.AuthService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus.UNAUTHORIZED
 import org.springframework.http.ResponseEntity

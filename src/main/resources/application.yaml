@@ -13,3 +13,6 @@ auth-service:
     endpoint: http://localhost:${server.port}/auth/token/{token}/isValid
   claims:
     endpoint: http://localhost:${server.port}/auth/token/{token}/claims
+token:
+  signing:
+    method: ${TOKEN_SIGNING_METHOD:Symmetric }
