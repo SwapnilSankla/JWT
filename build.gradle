@@ -26,6 +26,8 @@ compileTestKotlin {
 dependencies {
     implementation 'org.jetbrains.kotlin:kotlin-stdlib'
     implementation 'org.springframework.boot:spring-boot-starter-web:2.4.5'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator:2.4.5'
+    implementation 'org.springdoc:springdoc-openapi-ui:1.5.8'
     implementation 'com.fasterxml.jackson.module:jackson-module-kotlin:2.9.8'
     implementation 'io.jsonwebtoken:jjwt-api:0.11.2'
     runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.2'
