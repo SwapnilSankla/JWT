@@ -1,6 +1,5 @@
 package com.swapnilsankla.jwt.auth.service
 
-import jdk.jshell.spi.ExecutionControl.NotImplementedException
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 import org.springframework.util.ResourceUtils
